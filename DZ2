@@ -1,0 +1,117 @@
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Load the image
+img_path = '001.jpg'  # Update with the actual path to your image
+img = cv2.imread(img_path)
+
+# Specify the coordinates of the white patch
+row, col = 550, 100
+
+# Extract the color values of the white patch
+white = img[row, col, :]
+
+# Calculate scaling coefficients
+coeffs = 255.0 / white
+
+# Apply white balancing and generate a balanced image
+balanced = np.zeros_like(img, dtype=np.float32)
+for channel in range(3):
+    balanced[..., channel] = img[..., channel] * coeffs[channel]
+
+# Normalize the balanced image to the range [0, 1]
+balanced = balanced / 255
+
+# Clip values greater than 1 to preserve dynamic range
+balanced[balanced > 1] = 1
+
+# Display the original and balanced images
+plt.figure(figsize=(10, 5))
+
+plt.subplot(1, 2, 1)
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.title('Original Image')
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+plt.imshow(balanced)
+plt.title('White Patch Balanced Image')
+plt.axis('off')
+
+plt.show()
+# - - - - - - - - - - - - - - 
+
+
+# - - - - - - - - - - - - - - 
+
+row, col = 550, 1000 
+white = img[row, col, :]
+coeffs = 255.0/white
+
+# Apply white balancing and generate balanced image
+balanced = np.zeros_like(img, dtype=np.float32)
+for channel in range(3):
+    balanced[..., channel] = img[..., channel] * coeffs[channel]
+
+# White patching does not guarantee that the dynamic range is preserved, images must be clipped.
+balanced = balanced/255
+balanced[balanced > 1] = 1
+
+plt.subplot(121), plt.imshow(img)
+plt.subplot(122), plt.imshow(balanced)
+
+# - - - - - - - - - - - - - - 
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Load your image
+img = cv2.imread('color01.png')  # Оновіть шлях до вашого зображення
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Compute the maximum values for all three colour channels (red, green, blue)
+max_r = np.max(img[:, :, 0])
+max_g = np.max(img[:, :, 1])
+max_b = np.max(img[:, :, 2])
+
+# Apply scale-by-max balancing and generate the balanced image
+balanced = img.copy()
+balanced[:, :, 0] = img[:, :, 0] / max_r
+balanced[:, :, 1] = img[:, :, 1] / max_g
+balanced[:, :, 2] = img[:, :, 2] / max_b
+
+# Show the original and the scaled-by-max balanced image side by side
+plt.figure(figsize=(10, 5))
+
+plt.subplot(121), plt.imshow(img)
+plt.subplot(122), plt.imshow(balanced)
+
+ # сбалансированная картинка - все черная
+
+ # - - - - - - - - - - - - - - 
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Load your image
+img = cv2.imread('color01.png')  # Оновіть шлях до вашого зображення
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Compute the maximum value across all channels
+max_value = np.max(img)
+
+# Apply scale-by-max balancing and generate the balanced image
+balanced = img / max_value
+
+# Show the original and the scaled-by-max balanced image side by side
+plt.figure(figsize=(10, 5))
+
+plt.subplot(121), plt.imshow(img)
+plt.subplot(122), plt.imshow(balanced)
+
+# сбалансированная картинка - цветная (не сильно отличается от оригинала)
+
+
